@@ -1,24 +1,26 @@
 import YOUTUBE_API_KEY from '../config/youtube.js';
 
-var searchYouTube = (options, callback) => {
+var searchYouTube = ({key, query, max = 5}, callback) => {
   // TODO
-  $.ajax({
-    url: 'https://www.googleapis.com/youtube/v3/search',
-    type: 'GET',
-    data: data,
-    contentType: _____,
-    success: successCB,
-    error: errorCB || function(error) {
-      console.error('Failed to fetch videos', error);
-    }
-  });
-};
+  $.get('https://www.googleapis.com/youtube/v3/search', {
+    part: 'snippet',
+    q: query,
+    type: 'video',
+    videoEmbeddable: 'true',
+    maxResults: max,
+    key: key
+  })
+    .done(({items}) => {
+      if (callback()) {
+        callback(items);
+      }
+    })
+    .fail(({responseJSON}) => {
+      responseJSON.error.errors.forEach((err) =>
+        console.error(err)
+      );
+    }); 
 
-var options = {
-  type: video,
-  videoEmbeddable: true,
-  // max:
-  key: YOUTUBE_API_KEY,
 };
 
 export default searchYouTube;
